@@ -29,5 +29,62 @@ def final_disk_speed(height: float, length: float, incline: float, mass: float, 
             #v = sqrt(4/3 gh)
         #return speed
 
+    if (height < 0):
+        print("Invalid height, height cannot be less than 0")
+        return 0
     
     return np.sqrt(4/3*GRAVITY_ACCEL*height)
+
+
+
+#-----------------------------------------------------------------------------------------------------------------
+
+#Run tests
+def test_function():
+    result = final_disk_speed(1.0, 1, 30, 1, 0.2, 0.1)
+    expected = np.sqrt((4/3) * GRAVITY_ACCEL * 1.0)
+    assert np.isclose(result, expected), f"Expected {expected}, got {result}"
+
+def test_zero_height():
+    result = final_disk_speed(0.0, 1, 45, 1, 0.5, 0.1)
+    assert result == 0.0, f"Expected 0.0, got {result}"
+
+def test_negative_height():
+    result = final_disk_speed(-1.0, 1, 45, 1, 0.5, 0.1)
+    assert np.isnan(result) or result <= 0, f"Expected invalid result for negative height, got {result}"
+
+def test_large_height():
+    h = 1000000
+    result = final_disk_speed(h, 0, 0, 0, 0, 0)
+    expected = np.sqrt((4 / 3) * GRAVITY_ACCEL * h)
+    assert np.isclose(result, expected, rtol=1e-5), f"Expected {expected}, got {result}"
+
+def test_zero_mass():
+    """Tests the scenario when mass is zero. Should not affect speed."""
+    result = final_disk_speed(5, 1, 10, 0, 0.1, 0.2)
+    expected = np.sqrt((4 / 3) * GRAVITY_ACCEL * 5)
+    assert np.isclose(result, expected), f"Expected {expected}, got {result}"
+
+def test_zero_friction():
+    """Tests the scenario when friction is zero. Should not affect speed."""
+    result = final_disk_speed(5, 1, 10, 1, 0, 0.2)
+    expected = np.sqrt((4 / 3) * GRAVITY_ACCEL * 5)
+    assert np.isclose(result, expected), f"Expected {expected}, got {result}"
+
+def test_zero_radius():
+    """Tests the scenario when radius is zero. Should not affect speed."""
+    result = final_disk_speed(5, 1, 10, 1, 0.1, 0)
+    expected = np.sqrt((4 / 3) * GRAVITY_ACCEL * 5)
+    assert np.isclose(result, expected), f"Expected {expected}, got {result}"
+
+
+# Run tests
+if __name__ == "__main__":
+    test_function()
+    test_zero_height()
+    test_negative_height()
+    test_large_height()
+    test_zero_mass()
+    test_zero_friction()
+    test_zero_radius()
+    print("All tests passed :)")
